@@ -1,0 +1,47 @@
+{
+	"_schemaVersion" : "1.0.0",
+	"bgDataRead" : 
+	{
+		"inputs" : 
+		[
+			{
+				"kind" : "required",
+				"name" : "filename",
+				"purpose" : ".bgData文件路径",
+				"type" : 
+				[
+					"char"
+				]
+			},
+			{
+				"kind" : "namevalue",
+				"name" : "Llimit",
+				"purpose" : "BeamGage 颜色→z轴刻度下限",
+				"type" : 
+				[
+					"numeric",
+					">=0",
+					"<1"
+				]
+			},
+			{
+				"kind" : "namevalue",
+				"name" : "maxpower",
+				"purpose" : "BeamGage 颜色→z轴刻度峰值",
+				"type" : 
+				[
+					"numeric"
+				]
+			},
+			{
+				"kind" : "namevalue",
+				"name" : "GroupName",
+				"purpose" : "BeamGage 读取帧序号",
+				"type" : 
+				[
+					"numeric"
+				]
+			}
+		]
+	}
+}
