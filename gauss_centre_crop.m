@@ -1,6 +1,6 @@
 clear
-inputFolder = 'D:\WORK\gitfile\SWGModeFieldCropbyGauss2\img'; 
-outputFolder = 'D:\WORK\gitfile\SWGModeFieldCropbyGauss2\img\output';
+inputFolder = '.\img'; 
+outputFolder = '.\output';
 imageFiles = dir(fullfile(inputFolder, '*.tiff'));
 numImages = length(imageFiles);
 
@@ -8,7 +8,7 @@ numImages = length(imageFiles);
 [crop_width, crop_height] = deal(400, 400);
 
 % 设置z轴刻度下限
-z_threshold = 5.2;
+z_threshold = 5;
 
 % 标尺设置
 scaleValue = 10; % 标尺表示的实际物理长度
@@ -16,8 +16,8 @@ scaleLength = 100; % 标尺在图像中的像素长度
 scaleWidth = 20; % 标尺的宽度
 
 %%
-for i = 1:numImages
-    img0 = imread(fullfile(inputFolder, imageFiles(i).name));
+for temp = 1:numImages
+    img0 = imread(fullfile(inputFolder, imageFiles(temp).name));
     img = beamGageRainbow2Gray(img0);
 
     % 将z轴下限以下全部替换为NaN
@@ -26,6 +26,9 @@ for i = 1:numImages
 
     % 二维高斯参数：幅值，中心x，中心y，宽度（sigma_x 和 sigma_y），偏移量
     [~, ~, gauss2] = gauss2fit(1:size(img,2), 1:size(img,1), log(img_filtered));
+    % x=1:size(img,2);
+    % y=1:size(img,1);
+    % z=log(img_filtered);
     [center_x, center_y] = deal(gauss2.X0, gauss2.Y0);
 
     % 计算裁剪区域的左上角坐标
@@ -40,20 +43,20 @@ for i = 1:numImages
     cropped_img = img(y_start:y_end, x_start:x_end);
 
     % 添加标尺 定义标尺起点位置
-    x_start_scale = size(cropped_img, 2) - scaleLength - 10;
-    y_start_scale = size(cropped_img, 1) - 20;
-    x_end_scale = x_start_scale + scaleLength;
-
-    % 绘制标尺条
-    cropped_img(y_start_scale:y_start_scale + scaleWidth - 1, x_start_scale:x_end_scale) = 255; % 白色标尺条
-
-    % 在图像上添加标尺数值
-    position = [x_start_scale, y_start_scale - 15]; % 标尺数值位置
-    cropped_img = insertText(cropped_img, position, sprintf('%d μm', scaleValue), ...
-                             'FontSize', 5, 'TextColor', 'white', 'BoxColor', 'black');
+    % x_start_scale = size(cropped_img, 2) - scaleLength - 10;
+    % y_start_scale = size(cropped_img, 1) - 20;
+    % x_end_scale = x_start_scale + scaleLength;
+    % 
+    % % 绘制标尺条
+    % cropped_img(y_start_scale:y_start_scale + scaleWidth - 1, x_start_scale:x_end_scale) = 255; % 白色标尺条
+    % 
+    % % 在图像上添加标尺数值
+    % position = [x_start_scale, y_start_scale - 15]; % 标尺数值位置
+    % cropped_img = insertText(cropped_img, position, sprintf('%d μm', scaleValue), ...
+    %                          'FontSize', 5, 'TextColor', 'white', 'BoxColor', 'black');
 
     % 保存图像
-    outputFileName = fullfile(outputFolder, ['cropped_' imageFiles(i).name]);
+    outputFileName = fullfile(outputFolder, ['cropped_' imageFiles(temp).name]);
     imwrite(uint8(cropped_img), outputFileName);
 end
 
